@@ -18,7 +18,7 @@ spec:
         app: reviewsproducer
     spec:
       containers:
-      - image: leungsteve/reviewsproducer-splkotel:1.1
+      - image: leungsteve/reviewsproducer-splkotel:1.2
         name: reviewsproducer
         resources: {}
         env:
@@ -28,6 +28,8 @@ spec:
               fieldPath: status.hostIP
         - name: OTEL_EXPORTER_OTLP_ENDPOINT
           value: "http://$(SPLUNK_OTEL_AGENT):4317"
+        - name: SPLUNK_METRICS_ENDPOINT
+            value: "http://$(SPLUNK_OTEL_AGENT):9943"
         - name: OTEL_SERVICE_NAME
           value: "reviewsproducer"
         - name: OTEL_RESOURCE_ATTRIBUTES

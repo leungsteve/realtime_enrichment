@@ -27,6 +27,8 @@ spec:
               fieldPath: status.hostIP
         - name: OTEL_SERVICE_NAME
           value: 'businesslookup'
+        - name: SPLUNK_METRICS_ENDPOINT
+          value: "http://$(SPLUNK_OTEL_AGENT):9943"
         - name: OTEL_EXPORTER_OTLP_ENDPOINT
           value: "http://$(SPLUNK_OTEL_AGENT):4317"
         - name: OTEL_RESOURCE_ATTRIBUTES

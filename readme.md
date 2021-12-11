@@ -70,9 +70,11 @@ helm repo add bitnami https://charts.bitnami.com/bitnami
 helm install kafka --set replicaCount=3 --set metrics.jmx.enabled=true --set metrics.kafka.enabled=true  --set zookeeper.metrics.enabled=true --set deleteTopicEnable=true bitnami/kafka
 helm install mongodb --set metrics.enabled=true bitnami/mongodb --set global.namespaceOverride=default --set auth.rootUser=root --set auth.rootPassword=splunk --set auth.enabled=false
 ```
-2) Install the Splunk OTEL helm chart. In this example, the K8 cluster name is sl-k8. Notice that values.yaml files are provided for Zookeeper, MongoDB and Kafka so metrics for these components will be captured. 
+2) Install the Splunk OTEL helm chart. In this example, the K8 cluster name is sl-K3s. Notice that values.yaml files are provided for Zookeeper, MongoDB and Kafka so metrics for these components will be captured. 
 ```
-helm install --set provider=' ' --set distro=' ' --set splunkObservability.accessToken=$ACCESS_TOKEN --set clusterName='sl-k8' --set splunkObservability.realm='us0' --set otelCollector.enabled='false'  --values kafka.values.yaml --values mongodb.values.yaml --values zookeeper.values.yaml --generate-name splunk-otel-collector-chart/splunk-otel-collector 
+helm repo add splunk-otel-collector-chart https://signalfx.github.io/splunk-otel-collector-chart
+helm repo update
+helm install --set provider=' ' --set distro=' ' --set splunkObservability.accessToken=$SPLUNK_ACCESS_TOKEN --set clusterName='sl-K3s' --set splunkObservability.realm=$SPLUNK_REALM --set otelCollector.enabled='false'  --values kafka.values.yaml --values mongodb.values.yaml --values zookeeper.values.yaml --generate-name splunk-otel-collector-chart/splunk-otel-collector 
 ```
 
 3) Verify that the Kafka, MongoDB and Splunk Otel Collector helm charts are installed. Note that names may differ.
