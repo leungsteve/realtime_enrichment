@@ -1,0 +1,10 @@
+clusterName: sl-K3s
+splunkObservability:
+  realm: us1
+  accessToken: xyz
+
+fluentd:
+  config:
+    containers:
+      logFormatType: cri
+      criTimeFormat: "%Y-%m-%dT%H:%M:%S.%NZ"

@@ -48,7 +48,7 @@ public class ReviewsProducer {
                     }
                 }
             });
-            TimeUnit.SECONDS.sleep(3);;
+//            TimeUnit.SECONDS.sleep(3);;
         }
         // flush and close producer
         producer.flush();
