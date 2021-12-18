@@ -60,11 +60,16 @@ ubuntu@test4cpu8gb:~$ ll /var/appdata/yelp*
 curl -sfL https://get.k3s.io | sh -
 curl -s https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
 sudo mkdir -p ~/.kube
-sudo cp /etc/rancher/k3s/k3s.yaml .kube/config
+sudo cp /etc/rancher/k3s/k3s.yaml ~/.kube/config
+sudo chown `whoami`. ~/.kube/config
+echo 'export KUBECONFIG=~/.kube/config' >> ~/.bashrc
+source ~/.bashrc
 ```
 
 ## Install and get metrics for K8, Kafka and MongoDB
 1) Install the Kafka and MongoDB with helm charts
+Note that for Kafka, replicaCount=3. This provides uw with 3 brokers. We're also enabling metrics for Kafka and Zookeeper. Finally, we're allowing topics to be deleted since this is a demo environment.
+Note that MongoDB is also configured with metrics enabled and a weak username and password since this is a demo environment.
 ```
 helm repo add bitnami https://charts.bitnami.com/bitnami
 helm install kafka --set replicaCount=3 --set metrics.jmx.enabled=true --set metrics.kafka.enabled=true  --set zookeeper.metrics.enabled=true --set deleteTopicEnable=true bitnami/kafka
@@ -74,7 +79,7 @@ helm install mongodb --set metrics.enabled=true bitnami/mongodb --set global.nam
 ```
 helm repo add splunk-otel-collector-chart https://signalfx.github.io/splunk-otel-collector-chart
 helm repo update
-helm install --set provider=' ' --set distro=' ' --set splunkObservability.accessToken=$SPLUNK_ACCESS_TOKEN --set clusterName='sl-K3s' --set splunkObservability.realm=$SPLUNK_REALM --set otelCollector.enabled='false'  --values kafka.values.yaml --values mongodb.values.yaml --values zookeeper.values.yaml --generate-name splunk-otel-collector-chart/splunk-otel-collector 
+helm install --set provider=' ' --set distro=' ' --set splunkObservability.accessToken=$SPLUNK_ACCESS_TOKEN --set clusterName='sl-K3s' --set splunkObservability.realm=$SPLUNK_REALM --set otelCollector.enabled='false' --set splunkObservability.logsEnabled='true' --set gateway.enabled='false' --values kafka.values.yaml --values mongodb.values.yaml --values zookeeper.values.yaml --values alwayson.values.yaml --values k3slogs.yaml --generate-name splunk-otel-collector-chart/splunk-otel-collector 
 ```
 
 3) Verify that the Kafka, MongoDB and Splunk Otel Collector helm charts are installed. Note that names may differ.
@@ -138,3 +143,36 @@ You will see the following in the APM service map for this application.
 ![apmservicemap](./images/servicemapworking.png)
 
 
+##Troubleshooting and cleanup notes:
+If you need to run kafka console commands start the kafka-client pod:
+```
+kubectl run kafka-client --restart='Never' --image docker.io/bitnami/kafka:2.8.1-debian-10-r73 --namespace default --command -- sleep infinity
+```
+You can exec (shell) into the kafka client pod or run a command 
+```
+kubectl exec --tty -i kafka-client --namespace default -- bash
+
+or
+
+kubectl exec kafka-client -- kafka-topics.sh --bootstrap-server kafka.default.svc.cluster.local:9092 --list
+kubectl exec kafka-client -- kafka-topics.sh --bootstrap-server kafka.default.svc.cluster.local:9092 --describe --topic reviews
+kubectl exec kafka-client -- kafka-topics.sh --bootstrap-server kafka.default.svc.cluster.local:9092 --delete --topic reviews
+kubectl exec kafka-client -- kafka-topics.sh --bootstrap-server kafka.default.svc.cluster.local:9092 --create --topic reviews --replication-factor 2 --partitions 5
+
+```
+
+To connect to MongoDB and cleanup (delete the O11yCollection):
+```
+kubectl run --namespace default mongodb-client --rm --tty -i --restart='Never' --env="MONGODB_ROOT_PASSWORD=$MONGODB_ROOT_PASSWORD" --image docker.io/bitnami/mongodb:4.4.10-debian-10-r44 --command -- bash
+mongo admin --host "mongodb"
+use O11y
+db.O11yCollection.drop()
+exit
+exit
+```
+
+To run curl:
+```
+kubectl run curl --restart='Never' --image curlimages/curl --command -- sleep infinity
+kubectl exec curl -- curl -s http://www.google.com
+```
