@@ -23,7 +23,7 @@ public class ReviewsProducer {
         properties.setProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         // create the producer
         KafkaProducer<String, String> producer = new KafkaProducer<String, String>(properties);
-        for (int i=0; i<100; i++ ) {
+        for (int i=0; i<10000000; i++ ) {
             // get a review
             HttpClient client = HttpClient.newHttpClient();
             HttpRequest request = HttpRequest.newBuilder().uri(URI.create("http://review:5000/get_review")).build();

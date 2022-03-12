@@ -1,6 +1,6 @@
-#Real-time demo app
+# Real-time demo app
 
-##Introduction
+## Introduction
 
 This is a real-time demo application that has been auto-instrumented for Splunk Observability Cloud. Instructions and configuration files are also provided to set up K3s, a Kafka cluster and MongoDB running on a Mac (intel). When completed, logs, metrics and traces will be visible in Splunk Observability Cloud for this application and the underlying infrastructure components.
 
@@ -22,8 +22,7 @@ The following illustrates how the different microservices interact with one anot
 The following illustrates the environment where this application is running on and how the logs, metrics and traces are captured and sent to Splunk Observability Cloud.
 
 ![infrastructure](./images/Infrastructure.jpg)
-
-##Prerequisites
+ Prerequisites
 
 - Splunk Observability Cloud Access Key
 - clone this repository
@@ -36,7 +35,7 @@ ll /var/appdata/yelp_academic_dataset_*
 ```
 
 
-##Create and configure a Multipass VM with K3s and helm
+## Create and configure a Multipass VM with K3s and helm
 
 1) Create a multipass VM. We will use test4cpu8gb as my VM name throughout this example.
 ```
@@ -111,7 +110,7 @@ The Kafka Brokers Dashboard shows metrics for our Kafka Cluster:
 The MongoDB Host Dashboard shows metrics for MongoDB:
 ![MongoDB](./images/mongodb_connections.jpg)
 
-##Deploy the Real-time Demo Application
+## Deploy the Real-time Demo Application
 YAML files for K8 deployment and services are provided in the k8_yamls folder. To deploy the application, simply apply all of these files.
 ```
 cd k8_yamls
@@ -142,8 +141,18 @@ You will see the following in the APM service map for this application.
 
 ![apmservicemap](./images/servicemapworking.png)
 
+## To Do:
+- [ ] Write API/webhook for scale-up/scale-down
+- [ ] Implement automatic scale-up when consumer lag is too high
+- [ ] Raise Incident with OnCall
+- [ ] Kafka topic selector (dashboard)
+- [ ] Low: replace stub sentiment analyzer with a NLTK (or other)
+- [ ] Use Terraform to build Dashboards for additional apps that are leveraging Kafka
+- [ ] Allow gremlin testing
+  - API to stop microservices
+  - 
 
-##Troubleshooting and cleanup notes:
+## Troubleshooting and cleanup notes:
 If you need to run kafka console commands start the kafka-client pod:
 ```
 kubectl run kafka-client --restart='Never' --image docker.io/bitnami/kafka:2.8.1-debian-10-r73 --namespace default --command -- sleep infinity
