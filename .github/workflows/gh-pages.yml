@@ -3,8 +3,7 @@ name: github pages
 on:
   push:
     branches:
-      - main  # Set a branch to deploy
-      - hugo-docs
+      - gh-pages
   pull_request:
 
 jobs:
