@@ -1,7 +1,11 @@
 name: github pages
 
 on:
-  - push
+  push:
+    branches:
+      - gh-pages
+      - hugo
+  pull_request:
 
 jobs:
   deploy:
