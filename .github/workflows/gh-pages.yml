@@ -37,7 +37,7 @@ jobs:
       - run: npm ci
 
       - name: Build
-        run: hugo --verbose --minify --environment gh-pages --publishDir docs
+        run: hugo --verbose --minify --environment gh-pages --contentDir docs
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3

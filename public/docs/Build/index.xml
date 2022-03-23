@@ -1,0 +1,79 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Realtime Data Enrichment Workshop – Build &amp; Run</title><link>https://tjohander-splunk.github.io/realtime_enrichment/docs/build/</link><description>Recent content in Build &amp; Run on Realtime Data Enrichment Workshop</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><atom:link href="https://tjohander-splunk.github.io/realtime_enrichment/docs/build/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: Install Helm Charts</title><link>https://tjohander-splunk.github.io/realtime_enrichment/docs/build/install-helm-charts/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://tjohander-splunk.github.io/realtime_enrichment/docs/build/install-helm-charts/</guid><description>
+&lt;h2 id="install-helm-charts-and-get-metrics-for-k8-kafka-and-mongodb">Install Helm Charts and get metrics for K8, Kafka and MongoDB&lt;/h2>
+&lt;p>Install the Kafka and MongoDB with helm charts. Note that for Kafka, replicaCount=3. This provides uw with 3 brokers. We&amp;rsquo;re also enabling metrics for Kafka and Zookeeper. Finally, we&amp;rsquo;re allowing topics to be deleted since this is a demo environment. Note that MongoDB is also configured with metrics enabled and a weak username and password since this is a demo environment.&lt;/p>
+&lt;h3 id="add-helm-charts-for-kafka-and-mongodb">Add Helm Charts for Kafka and MongoDB&lt;/h3>
+&lt;p>Install the Helm Charts for Kafka and MongoDB. This will automatically provide MongoDB and the required Kafka resource to our Application stack&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>helm repo add bitnami https://charts.bitnami.com/bitnami
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>helm install kafka --set &lt;span style="color:#000">replicaCount&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#0000cf;font-weight:bold">3&lt;/span> --set metrics.jmx.enabled&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#204a87">true&lt;/span> --set metrics.kafka.enabled&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#204a87">true&lt;/span> --set zookeeper.metrics.enabled&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#204a87">true&lt;/span> --set &lt;span style="color:#000">deleteTopicEnable&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#204a87">true&lt;/span> bitnami/kafka
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>helm install mongodb --set metrics.enabled&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#204a87">true&lt;/span> bitnami/mongodb --set global.namespaceOverride&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>default --set auth.rootUser&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>root --set auth.rootPassword&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>splunk --set auth.enabled&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#204a87">false&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="install-splunk-otel-helm-chart">Install Splunk Otel Helm Chart&lt;/h3>
+&lt;p>Install the Splunk OTEL helm chart. In this example, the K8 cluster name is &lt;code>sl-K3s&lt;/code>. Notice that &lt;code>values.yaml&lt;/code> files are provided for Zookeeper, MongoDB and Kafka so metrics for these components will be captured.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>helm repo add splunk-otel-collector-chart https://signalfx.github.io/splunk-otel-collector-chart
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>helm repo update
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>helm install --set &lt;span style="color:#000">provider&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#39; &amp;#39;&lt;/span> --set &lt;span style="color:#000">distro&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#39; &amp;#39;&lt;/span> --set splunkObservability.accessToken&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#000">$SPLUNK_ACCESS_TOKEN&lt;/span> --set &lt;span style="color:#000">clusterName&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#39;sl-K3s&amp;#39;&lt;/span> --set splunkObservability.realm&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#000">$SPLUNK_REALM&lt;/span> --set otelCollector.enabled&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#39;false&amp;#39;&lt;/span> --set splunkObservability.logsEnabled&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#39;true&amp;#39;&lt;/span> --set gateway.enabled&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#39;false&amp;#39;&lt;/span> --values kafka.values.yaml --values mongodb.values.yaml --values zookeeper.values.yaml --values alwayson.values.yaml --values k3slogs.yaml --generate-name splunk-otel-collector-chart/splunk-otel-collector
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="verify-helm-chart-installation">Verify Helm Chart Installation&lt;/h3>
+&lt;p>Verify that the Kafka, MongoDB and Splunk Otel Collector helm charts are installed. Note that names may differ.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>ubuntu@test4cpu8gb:~/otel$ helm list
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>NAME NAMESPACE REVISION UPDATED STATUS CHART APP VERSION
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>kafka default &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> 2021-12-07 12:48:47.066421971 -0800 PST deployed kafka-14.4.1 2.8.1
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>mongodb default &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> 2021-12-07 12:49:06.132771625 -0800 PST deployed mongodb-10.29.2 4.4.10
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>splunk-otel-collector-1638910184 default &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> 2021-12-07 12:49:45.694013749 -0800 PST deployed splunk-otel-collector-0.37.1 0.37.1
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ubuntu@test4cpu8gb:~/otel$ kubectl get pods
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>NAME READY STATUS RESTARTS AGE
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>kafka-zookeeper-0 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 18m
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>kafka-2 2/2 Running &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> 18m
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>mongodb-79cf87987f-gsms8 2/2 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 18m
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>kafka-1 2/2 Running &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> 18m
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>kafka-exporter-7c65fcd646-dvmtv 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">3&lt;/span> 18m
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>kafka-0 2/2 Running &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> 18m
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>splunk-otel-collector-1638910184-agent-27s5c 2/2 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 17m
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>splunk-otel-collector-1638910184-k8s-cluster-receiver-8587qmh9l 1/1 Running &lt;span style="color:#0000cf;font-weight:bold">0&lt;/span> 17m
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Details about this K3s node is available in the K8 Navigator. Note that Related Context Link to Log Observer for this K8 node at the bottom.
+&lt;img src="../images/K8Navigator.jpg" alt="K8Navigator">&lt;/p>
+&lt;p>The Kafka Brokers Dashboard shows metrics for our Kafka Cluster:
+&lt;img src="./images/kafka_brokers.jpg" alt="Kafka">&lt;/p>
+&lt;p>The MongoDB Host Dashboard shows metrics for MongoDB:
+&lt;img src="./images/mongodb_connections.jpg" alt="MongoDB">&lt;/p></description></item><item><title>Docs: Deploy the Application</title><link>https://tjohander-splunk.github.io/realtime_enrichment/docs/build/deploy-the-application/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://tjohander-splunk.github.io/realtime_enrichment/docs/build/deploy-the-application/</guid><description>
+&lt;h1 id="deploy-the-real-time-demo-application">Deploy the Real-time Demo Application&lt;/h1>
+&lt;p>YAML files for K8 deployment and services are provided in the k8_yamls folder. To deploy the application, simply apply all of these files.&lt;/p>
+&lt;pre tabindex="0">&lt;code>cd k8_yamls
+kubectl apply -f .
+&lt;/code>&lt;/pre>&lt;p>Note that the replicas for the reviewsproducer is set to 0.&lt;/p>
+&lt;pre tabindex="0">&lt;code>ubuntu@test4cpu8gb:/var/appdata/k8_yamls$ kubectl get deployments.apps
+NAME READY UP-TO-DATE AVAILABLE AGE
+userlookup 1/1 1 1 158m
+review 1/1 1 1 161m
+sentiment 1/1 1 1 159m
+mongodb 1/1 1 1 106m
+businesslookup 1/1 1 1 158m
+kafka-exporter 1/1 1 1 3h58m
+splunk-otel-collector-1638910184-k8s-cluster-receiver 1/1 1 1 3h57m
+reviewsconsumer 1/1 1 1 63m
+mongodbdetails 1/1 1 1 56m
+reviewsproducer 0/0 0 0 79m
+&lt;/code>&lt;/pre>&lt;p>When you&amp;rsquo;re ready, you can scale this deployment to 1 to begin the pipeline.&lt;/p>
+&lt;pre tabindex="0">&lt;code>kubectl scale deployment reviewsproducer --replicas=1
+&lt;/code>&lt;/pre>&lt;p>You will see the following in the APM service map for this application.&lt;/p>
+&lt;p>&lt;img src="./images/servicemapworking.png" alt="apmservicemap">&lt;/p></description></item><item><title>Docs: Troubleshooting and Cleanup</title><link>https://tjohander-splunk.github.io/realtime_enrichment/docs/build/troubleshooting-and-cleanup/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://tjohander-splunk.github.io/realtime_enrichment/docs/build/troubleshooting-and-cleanup/</guid><description>
+&lt;h2 id="troubleshooting-and-cleanup-notes">Troubleshooting and cleanup notes:&lt;/h2>
+&lt;p>If you need to run kafka console commands start the kafka-client pod:&lt;/p>
+&lt;pre tabindex="0">&lt;code>kubectl run kafka-client --restart=&amp;#39;Never&amp;#39; --image docker.io/bitnami/kafka:2.8.1-debian-10-r73 --namespace default --command -- sleep infinity
+&lt;/code>&lt;/pre>&lt;p>You can exec (shell) into the kafka client pod or run a command&lt;/p>
+&lt;pre tabindex="0">&lt;code>kubectl exec --tty -i kafka-client --namespace default -- bash
+or
+kubectl exec kafka-client -- kafka-topics.sh --bootstrap-server kafka.default.svc.cluster.local:9092 --list
+kubectl exec kafka-client -- kafka-topics.sh --bootstrap-server kafka.default.svc.cluster.local:9092 --describe --topic reviews
+kubectl exec kafka-client -- kafka-topics.sh --bootstrap-server kafka.default.svc.cluster.local:9092 --delete --topic reviews
+kubectl exec kafka-client -- kafka-topics.sh --bootstrap-server kafka.default.svc.cluster.local:9092 --create --topic reviews --replication-factor 2 --partitions 5
+&lt;/code>&lt;/pre>&lt;p>To connect to MongoDB and cleanup (delete the O11yCollection):&lt;/p>
+&lt;pre tabindex="0">&lt;code>kubectl run --namespace default mongodb-client --rm --tty -i --restart=&amp;#39;Never&amp;#39; --env=&amp;#34;MONGODB_ROOT_PASSWORD=$MONGODB_ROOT_PASSWORD&amp;#34; --image docker.io/bitnami/mongodb:4.4.10-debian-10-r44 --command -- bash
+mongo admin --host &amp;#34;mongodb&amp;#34;
+use O11y
+db.O11yCollection.drop()
+exit
+exit
+&lt;/code>&lt;/pre>&lt;p>To run curl:&lt;/p>
+&lt;pre tabindex="0">&lt;code>kubectl run curl --restart=&amp;#39;Never&amp;#39; --image curlimages/curl --command -- sleep infinity
+kubectl exec curl -- curl -s http://www.google.com
+&lt;/code>&lt;/pre></description></item></channel></rss>

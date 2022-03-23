@@ -1,0 +1,44 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Realtime Data Enrichment Workshop – Environment Setup</title><link>https://tjohander-splunk.github.io/realtime_enrichment/docs/setup/</link><description>Recent content in Environment Setup on Realtime Data Enrichment Workshop</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Thu, 17 Mar 2022 18:12:53 -0500</lastBuildDate><atom:link href="https://tjohander-splunk.github.io/realtime_enrichment/docs/setup/index.xml" rel="self" type="application/rss+xml"/><item><title>Docs: Prerequisites</title><link>https://tjohander-splunk.github.io/realtime_enrichment/docs/setup/pre-reqs/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://tjohander-splunk.github.io/realtime_enrichment/docs/setup/pre-reqs/</guid><description>
+&lt;h2 id="o11y-access-token">O11y Access Token&lt;/h2>
+&lt;ul>
+&lt;li>&lt;input disabled="" type="checkbox"> Splunk Observability Cloud Access Key (Steps should go here)&lt;/li>
+&lt;/ul>
+&lt;h2 id="clone-the-workshop-code">Clone the Workshop Code&lt;/h2>
+&lt;ul>
+&lt;li>&lt;input disabled="" type="checkbox"> Clone this repository (Steps should go here)&lt;/li>
+&lt;/ul>
+&lt;h2 id="fetch-the-yelp-data">Fetch the Yelp Data&lt;/h2>
+&lt;ul>
+&lt;li>Download and extract the Yelp Data Set to /var/appdata such that the following files are available: (Add explicit steps on download instructions)&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>ll /var/appdata/yelp_academic_dataset_*
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>-rw-r--r--@ &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> stevel staff &lt;span style="color:#0000cf;font-weight:bold">124380583&lt;/span> Jan &lt;span style="color:#0000cf;font-weight:bold">28&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">2021&lt;/span> /var/appdata/yelp_academic_dataset_business.json
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>-rw-r--r--@ &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> stevel staff &lt;span style="color:#0000cf;font-weight:bold">6936678061&lt;/span> Jan &lt;span style="color:#0000cf;font-weight:bold">28&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">2021&lt;/span> /var/appdata/yelp_academic_dataset_review.json
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>-rw-r--r--@ &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> stevel staff &lt;span style="color:#0000cf;font-weight:bold">3684505303&lt;/span> Jan &lt;span style="color:#0000cf;font-weight:bold">28&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">2021&lt;/span> /var/appdata/yelp_academic_dataset_user.json
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: Multipass</title><link>https://tjohander-splunk.github.io/realtime_enrichment/docs/setup/multipass/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://tjohander-splunk.github.io/realtime_enrichment/docs/setup/multipass/</guid><description>
+&lt;h3 id="install-multipass">Install Multipass&lt;/h3>
+&lt;p>For example:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>brew install multipass
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="launch-a-local-virtual-machine">Launch a local Virtual Machine&lt;/h3>
+&lt;p>Create a Multipass VM. We will use &lt;code>test4cpu8gb&lt;/code> as my VM name throughout this example.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>multipass launch --name test4cpu8gb --cpus &lt;span style="color:#0000cf;font-weight:bold">4&lt;/span> --mem 8Gb --disk 32GB
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="add-the-yelp-data-to-your-vms-file-system">Add the Yelp data to your VM&amp;rsquo;s file system&lt;/h3>
+&lt;p>Mount /var/appdata to the VM to make the Yelp dataset files available to the VM.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>multipass mount /var/appdata test4cpu8gb
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Launch shell into the vm and verify that &lt;code>/var/appdata&lt;/code> is mounted.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>multipass shell test4cpu8gb
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Once in your VM, validate the Yelp data is in the expected path&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>ubuntu@test4cpu8gb:~$ ll /var/appdata/yelp*
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>-rw-r--r-- &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> ubuntu ubuntu &lt;span style="color:#0000cf;font-weight:bold">124380583&lt;/span> Jan &lt;span style="color:#0000cf;font-weight:bold">28&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">2021&lt;/span> /var/appdata/yelp_academic_dataset_business.json
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>-rw-r--r-- &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> ubuntu ubuntu &lt;span style="color:#0000cf;font-weight:bold">6936678061&lt;/span> Jan &lt;span style="color:#0000cf;font-weight:bold">28&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">2021&lt;/span> /var/appdata/yelp_academic_dataset_review.json
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>-rw-r--r-- &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> ubuntu ubuntu &lt;span style="color:#0000cf;font-weight:bold">3684505303&lt;/span> Jan &lt;span style="color:#0000cf;font-weight:bold">28&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">2021&lt;/span> /var/appdata/yelp_academic_dataset_user.json
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Docs: Install K3 and Helm</title><link>https://tjohander-splunk.github.io/realtime_enrichment/docs/setup/install-k3-and-helm/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://tjohander-splunk.github.io/realtime_enrichment/docs/setup/install-k3-and-helm/</guid><description>
+&lt;p>Install K3s and helm. Run the following commands from the VM.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>curl -sfL https://get.k3s.io &lt;span style="color:#000;font-weight:bold">|&lt;/span> sh -
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>curl -s https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 &lt;span style="color:#000;font-weight:bold">|&lt;/span> bash
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo mkdir -p ~/.kube
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo cp /etc/rancher/k3s/k3s.yaml ~/.kube/config
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo chown &lt;span style="color:#4e9a06">`&lt;/span>whoami&lt;span style="color:#4e9a06">`&lt;/span>. ~/.kube/config
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87">echo&lt;/span> &lt;span style="color:#4e9a06">&amp;#39;export KUBECONFIG=~/.kube/config&amp;#39;&lt;/span> &amp;gt;&amp;gt; ~/.bashrc
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87">source&lt;/span> ~/.bashrc
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item></channel></rss>
