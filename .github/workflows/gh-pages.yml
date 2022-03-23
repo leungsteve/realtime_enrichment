@@ -37,10 +37,10 @@ jobs:
       - run: npm ci
 
       - name: Build
-        run: hugo --verbose --minify --environment gh-pages --contentDir docs
+        run: hugo --verbose --minify --environment gh-pages
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs
+          publish_dir: ./public
