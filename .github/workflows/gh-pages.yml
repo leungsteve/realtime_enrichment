@@ -37,11 +37,12 @@ jobs:
       - run: npm ci
 
       - name: Build
-        run: hugo --minify --environment gh-pages
+        run: hugo --verbose --minify --environment gh-pages
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         if: ${{ github.ref == 'refs/heads/main' }}
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
           publish_dir: ./public
