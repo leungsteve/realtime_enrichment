@@ -19,6 +19,9 @@ jobs:
       - name: Pull in Docsy Theme Submodule
         run: git clone https://github.com/google/docsy.git themes/docsy
 
+      - name: Submodule Update
+        run: git submodule update --init --recursive --depth 1
+
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v2
         with:
