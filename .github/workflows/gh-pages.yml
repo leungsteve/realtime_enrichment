@@ -15,8 +15,8 @@ jobs:
         with:
           submodules: recursive  # Fetch Hugo themes (true OR recursive)
 
-      - name: Pull in Theme Submodule
-        run: git submodule update --init --recursive
+      - name: Pull in Docsy Theme Submodule
+        run: git clone https://github.com/google/docsy.git themes/docsy
 
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v2
