@@ -1,20 +1,26 @@
-name: github pages
+name: Github Pages With Hugo
 
 on:
   push:
     branches:
-      - main  # Set a branch to deploy
-      - hugo-docs
+      - master
+      - main
   pull_request:
 
 jobs:
   deploy:
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
-          submodules: recursive  # Fetch Hugo themes (true OR recursive)
-          fetch-depth: 0    # Fetch all history for .GitInfo and .Lastmod
+          submodules: recursive # Fetch Hugo themes (true OR recursive)
+          fetch-depth: 1
+
+      - name: Pull in Docsy Theme Submodule
+        run: git clone --recurse-submodules --depth 1 https://github.com/google/docsy.git themes/docsy
+
+      - name: Submodule Update
+        run: git submodule update --init --recursive --depth 1
 
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v2
@@ -27,6 +33,9 @@ jobs:
         with:
           node-version: '14'
 
+      - name: NPM CI
+        run: npm install
+
       - name: Cache dependencies
         uses: actions/cache@v2
         with:
@@ -35,13 +44,12 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
 
-      - run: npm ci
-
-      - run: hugo --minify --environment gh-pages
+      - name: Build
+        run: hugo --verbose --minify --environment gh-pages --noTimes --noChmod
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
-        if: github.ref == 'refs/heads/main'
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
           publish_dir: ./public
