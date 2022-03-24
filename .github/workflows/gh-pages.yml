@@ -29,6 +29,9 @@ jobs:
         with:
           node-version: '14'
 
+      - name: NPM CI
+        run: npm ci
+
       - name: Cache dependencies
         uses: actions/cache@v2
         with:
@@ -36,9 +39,6 @@ jobs:
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
-
-      -  name: NPM CI
-         run: npm ci
 
       - name: Build
         run: hugo --verbose --minify --environment gh-pages
