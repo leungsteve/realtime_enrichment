@@ -1,7 +1,0 @@
-FROM openjdk:11
-COPY splunk-otel-javaagent.jar /splunk-otel-javaagent.jar
-COPY ./out/artifacts/producer_jar/ReviewsProducer.jar /ReviewsProducer.jar
-CMD ["java", "-javaagent:./splunk-otel-javaagent.jar", "-Dsplunk.profiler.enabled=true", "-Dsplunk.profiler.period.threaddump=1000", "-Dsplunk.metrics.enabled=true", "-jar", "-Dotel.instrumentation.common.experimental.suppress-messaging-receive-spans=true", "ReviewsProducer.jar"]
-
-#docker build -f Dockerfile.ReviewsProducer -t leungsteve/reviewsproducer-splkotel:1.0 . 2> /tmp/dockerbuild_log.txt
-#docker push leungsteve/reviewsproducer-splkotel:1.0

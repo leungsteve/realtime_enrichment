@@ -1,8 +1,0 @@
-FROM openjdk:11
-COPY splunk-otel-javaagent.jar /splunk-otel-javaagent.jar
-COPY jmx_prometheus_javaagent-0.16.1.jar /jmx_prometheus_javaagent-0.16.1.jar
-COPY ./out/artifacts/consumer_jar/ReviewsConsumerToMongo.jar /ReviewsConsumerToMongo.jar
-CMD ["java", "-javaagent:./splunk-otel-javaagent.jar", "-Dcom.sun.management.jmxremote.port=8888", "-Dcom.sun.management.jmxremote.rmi.port=8889", "-Dsplunk.profiler.enabled=true", "-Dsplunk.profiler.period.threaddump=1000", "-Dsplunk.metrics.enabled=true", "-jar", "-Dotel.instrumentation.common.experimental.suppress-messaging-receive-spans=true", "ReviewsConsumerToMongo.jar"]
-
-#docker build -f Dockerfile.ReviewsConsumerToMongo.metrics -t leungsteve/reviewsconsumertomongo-metrics-splkotel:1.0 . 2> /tmp/dockerbuild_log.txt
-#docker push leungsteve/reviewsconsumertomongo-splkotel:1.0
