@@ -3,3 +3,5 @@
 /.gitignore.swp
 node_modules
 /themes/
+/themes/docsy
+
