@@ -1,6 +1,5 @@
 # Project exclude paths
 /target/
 /.gitignore.swp
-themes/*
-
 node_modules
+/themes/
