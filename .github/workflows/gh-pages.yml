@@ -15,6 +15,9 @@ jobs:
         with:
           submodules: recursive  # Fetch Hugo themes (true OR recursive)
 
+      - name: Pull in Theme Submodule
+        run: git submodule update --init --recursive
+
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v2
         with:
@@ -34,7 +37,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
 
-      - run: npm ci
+      -  name: NPM CI
+         run: npm ci
 
       - name: Build
         run: hugo --verbose --minify --environment gh-pages
