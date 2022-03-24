@@ -16,7 +16,7 @@ jobs:
           submodules: recursive  # Fetch Hugo themes (true OR recursive)
 
       - name: Pull in Theme Submodule
-        run: git submodule update --init --recursive
+        run: git submodule init --recursive
 
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v2
