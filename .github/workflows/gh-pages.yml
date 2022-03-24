@@ -45,7 +45,7 @@ jobs:
             ${{ runner.os }}-node-
 
       - name: Build
-        run: hugo --verbose --minify --environment gh-pages
+        run: hugo --verbose --minify --environment gh-pages --noTimes --noChmod
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
