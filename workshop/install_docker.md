@@ -30,5 +30,5 @@ echo "log off and log back on to run docker commands with out sudo"
 
 # [Deploy a registry server](https://docs.docker.com/registry/deploying/)
 ```
-docker run -d -p 5000:8000 --restart=always --name registry registry:2
+docker run -d -e REGISTRY_HTTP_ADDR=0.0.0.0:8000 -p 8000:8000 --restart=always --name registry registry:2
 ```
