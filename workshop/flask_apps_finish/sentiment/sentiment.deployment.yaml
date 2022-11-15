@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sentiment
+  labels:
+    app: sentiment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sentiment
+  template:
+    metadata:
+      labels:
+        app: sentiment
+    spec:
+      imagePullSecrets:
+        - name: regcred
+      containers:
+      - image: localhost:8000/sentiment-splkotel:0.01
+        name: sentiment
+        env:
+          - name: SPLUNK_OTEL_AGENT
+            valueFrom:
+              fieldRef:
+                fieldPath: status.hostIP
+          - name: OTEL_SERVICE_NAME
+            value: 'sentiment'
+          - name: SPLUNK_METRICS_ENDPOINT
+            value: "http://$(SPLUNK_OTEL_AGENT):9943"
+          - name: OTEL_EXPORTER_OTLP_ENDPOINT
+            value: "http://$(SPLUNK_OTEL_AGENT):4317"
+          - name: OTEL_RESOURCE_ATTRIBUTES
+            value: 'deployment.environment=rtapp-workshop-stevel'

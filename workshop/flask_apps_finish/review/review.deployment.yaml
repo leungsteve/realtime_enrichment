@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: review
+  labels:
+    app: review
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: review
+  template:
+    metadata:
+      labels:
+        app: review
+    spec:
+      imagePullSecrets:
+        - name: regcred
+      containers:
+      - image: localhost:8000/review-splkotel:0.01
+        name: review
+        volumeMounts:
+        - mountPath: /var/appdata
+          name: appdata
+        env:
+        - name: SPLUNK_OTEL_AGENT
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP
+        - name: OTEL_SERVICE_NAME
+          value: 'review'
+        - name: SPLUNK_METRICS_ENDPOINT
+          value: "http://$(SPLUNK_OTEL_AGENT):9943"
+        - name: OTEL_EXPORTER_OTLP_ENDPOINT
+          value: "http://$(SPLUNK_OTEL_AGENT):4317"
+        - name: OTEL_RESOURCE_ATTRIBUTES
+          value: 'deployment.environment=rtapp-workshop-stevel'
+      volumes:
+      - name: appdata
+        hostPath:
+          path: /var/appdata

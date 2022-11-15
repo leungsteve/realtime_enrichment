@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: userlookup
+  labels:
+    app: userlookup
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: userlookup
+  template:
+    metadata:
+      labels:
+        app: userlookup
+    spec:
+      containers:
+      - image: localhost:8000/userlookup:0.01
+        name: userlookup
+        volumeMounts:
+        - mountPath: /var/appdata
+          name: appdata
+      volumes:
+      - name: appdata
+        hostPath:
+          path: /var/appdata

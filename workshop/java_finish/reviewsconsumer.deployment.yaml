@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: reviewsconsumer
+  name: reviewsconsumer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: reviewsconsumer
+  template:
+    metadata:
+      labels:
+        app: reviewsconsumer
+    spec:
+      imagePullSecrets:
+        - name: regcred
+      containers:
+        - image: localhost:8000/reviewsconsumertomongo-splkotel:0.01
+          name: reviewsconsumer
+          env:
+            - name: SPLUNK_OTEL_AGENT
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: "http://$(SPLUNK_OTEL_AGENT):4317"
+            - name: SPLUNK_METRICS_ENDPOINT
+              value: "http://$(SPLUNK_OTEL_AGENT):9943"
+            - name: OTEL_SERVICE_NAME
+              value: "reviewsconsumer"
+            - name: OTEL_RESOURCE_ATTRIBUTES
+              value: "deployment.environment=rtapp-workshop-stevel"

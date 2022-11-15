@@ -1,0 +1,6 @@
+FROM openjdk:11
+COPY ReviewsConsumerToMongo.jar /ReviewsConsumerToMongo.jar
+CMD ["java", "-jar", "ReviewsConsumerToMongo.jar"]
+
+#docker build -f Dockerfile.ReviewsConsumerToMongo.metrics -t stevel173/reviewsconsumertomongo:0.01 .
+#docker push leungsteve/reviewsconsumertomongo:0.01

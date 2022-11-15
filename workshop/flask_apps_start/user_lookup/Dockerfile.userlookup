@@ -1,0 +1,13 @@
+FROM python:3.10-slim
+
+WORKDIR /app
+COPY requirements.txt /app
+RUN pip install -r requirements.txt
+
+COPY ./user_lookup.py /app
+
+EXPOSE 5003
+CMD [ "python", "user_lookup.py" ]
+
+#docker build -f Dockerfile.userlookup -t localhost:8000/userlookup:0.01 .
+#docker push localhost:8000/userlookup:0.01

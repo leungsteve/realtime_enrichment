@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sentiment
+  labels:
+    app: sentiment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sentiment
+  template:
+    metadata:
+      labels:
+        app: sentiment
+    spec:
+      imagePullSecrets:
+        - name: regcred
+      containers:
+      - image: localhost:8000/sentiment:0.01
+        name: sentiment

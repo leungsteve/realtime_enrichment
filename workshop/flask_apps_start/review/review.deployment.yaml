@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: review
+  labels:
+    app: review
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: review
+  template:
+    metadata:
+      labels:
+        app: review
+    spec:
+      imagePullSecrets:
+        - name: regcred
+      containers:
+        - image: localhost:8000/review:0.01
+          name: review
+          volumeMounts:
+            - mountPath: /var/appdata
+              name: appdata
+      volumes:
+        - name: appdata
+          hostPath:
+            path: /var/appdata

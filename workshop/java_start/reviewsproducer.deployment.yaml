@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: reviewsproducer
+  name: reviewsproducer
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: reviewsproducer
+  template:
+    metadata:
+      labels:
+        app: reviewsproducer
+    spec:
+      imagePullSecrets:
+        - name: regcred
+      containers:
+      - image: stevel173/reviewsproducer:0.01
+        name: reviewsproducer

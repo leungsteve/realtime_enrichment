@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: businesslookup
+  labels:
+    app: businesslookup
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: businesslookup
+  template:
+    metadata:
+      labels:
+        app: businesslookup
+    spec:
+      imagePullSecrets:
+        - name: regcred
+      containers:
+      - image: localhost:8000/businesslookup-splkotel:0.01
+        name: businesslookup
+        env:
+          - name: SPLUNK_OTEL_AGENT
+            valueFrom:
+              fieldRef:
+                fieldPath: status.hostIP
+          - name: OTEL_SERVICE_NAME
+            value: 'businesslookup'
+          - name: SPLUNK_METRICS_ENDPOINT
+            value: "http://$(SPLUNK_OTEL_AGENT):9943"
+          - name: OTEL_EXPORTER_OTLP_ENDPOINT
+            value: "http://$(SPLUNK_OTEL_AGENT):4317"
+          - name: OTEL_RESOURCE_ATTRIBUTES
+            value: 'deployment.environment=rtapp-workshop-stevel'
+        volumeMounts:
+        - mountPath: /var/appdata
+          name: appdata
+      volumes:
+      - name: appdata
+        hostPath:
+          path: /var/appdata
