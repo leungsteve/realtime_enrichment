@@ -1,4 +1,4 @@
-FROM openjdk:11
+FROM docker.io/openjdk:11
 COPY ReviewsConsumerToMongo.jar /ReviewsConsumerToMongo.jar
 CMD ["java", "-jar", "ReviewsConsumerToMongo.jar"]
 
