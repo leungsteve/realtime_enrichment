@@ -2,5 +2,5 @@ FROM openjdk:11
 COPY ReviewsProducer.jar /ReviewsProducer.jar
 CMD ["java", "-jar", "ReviewsProducer.jar"]
 
-#docker build -f Dockerfile.ReviewsProducer -t stevel173/reviewsproducer:0.01 .
-#docker push stevel173/reviewsproducer:0.01
+#docker build -f Dockerfile.ReviewsProducer -t localhost:8000/reviewsproducer:0.01 .
+#docker push localhost:8000/reviewsproducer:0.01
