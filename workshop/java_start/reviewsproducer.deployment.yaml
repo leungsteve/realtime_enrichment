@@ -17,5 +17,5 @@ spec:
       imagePullSecrets:
         - name: regcred
       containers:
-      - image: stevel173/reviewsproducer:0.01
+      - image: localhost:8000/reviewsproducer:0.01
         name: reviewsproducer

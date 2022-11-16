@@ -246,7 +246,7 @@ CMD [ "python", "review.py" ]
 
 Note: Substitute your own repo and use an appropriate version number. Increment the version as you make changes and roll new images and recommend avoid re-using version numbers since K8 will cache images.
 ```
-(rtapp-workshop) stevel@C02G312EMD6R review % docker build -t stevel173/review:0.1 .
+(rtapp-workshop) stevel@C02G312EMD6R review % docker build -t localhost:8000/review:0.1 .
 [+] Building 35.5s (11/11) FINISHED
  => [internal] load build definition from Dockerfile                              0.0s
          ...snip...
@@ -256,7 +256,7 @@ Note: Substitute your own repo and use an appropriate version number. Increment 
  => exporting to image                                                            0.2s
  => => exporting layers                                                           0.2s
  => => writing image sha256:61da27081372723363d0425e0ceb34bbad6e483e698c6fe439c5  0.0s
- => => naming to docker.io/stevel173/review:0.1                                   0.0
+ => => naming to docker.io/localhost:8000/review:0.1                                   0.0
 ```
 
 
@@ -264,13 +264,13 @@ Note: Substitute your own repo and use an appropriate version number. Increment 
 
 Note: If needed, logon to dockerhub
 ```
-docker login -u stevel173
+docker login -u localhost:8000
 Password:
 Login Succeeded
 ```
 ```
-docker push stevel173/review:0.1
-The push refers to repository [docker.io/stevel173/review-splkotel]
+docker push localhost:8000/review:0.1
+The push refers to repository [docker.io/localhost:8000/review-splkotel]
 02c36dfb4867: Pushed
          ...snip...
 fd95118eade9: Pushed
@@ -288,7 +288,7 @@ Reference: [Pull an Image from a Private Registry](https://kubernetes.io/docs/ta
 ```
 sudo docker login
 Login with your Docker ID to push and pull images from Docker Hub. If you don't have a Docker ID, head over to https://hub.docker.com to create one.
-Username: stevel173
+Username: localhost:8000
 Password:
 WARNING! Your password will be stored unencrypted in /home/ubuntu/.docker/config.json
 Login Succeeded
@@ -412,15 +412,15 @@ CMD ["java", "ReviewsProducer.jar"]
 #### Create a container image for ReviewsProducer
 Note: the repository name must be lowercase
 ```
-(rtapp-workshop) stevel@C02G312EMD6R java % docker build -f Dockerfile.ReviewsProducer -t stevel173/reviewsproducer:0.01 .
+(rtapp-workshop) stevel@C02G312EMD6R java % docker build -f Dockerfile.ReviewsProducer -t localhost:8000/reviewsproducer:0.01 .
 [+] Building 40.1s (7/7) FINISHED
          ...snip...                  0.1s
  => => writing image sha256:718c14255f1f492e488da98ee3e1a4f2e1dfb7f8f2fbdc438b6ab57776d0396b                 0.0s
- => => naming to docker.io/stevel173/reviewsproducer:0.01                                                    0.0s
+ => => naming to docker.io/localhost:8000/reviewsproducer:0.01                                                    0.0s
 ```
 #### Push the ReviewsProducer container image into a container repository
 ```
-docker push stevel173/reviewsproducer:0.01
+docker push localhost:8000/reviewsproducer:0.01
 ```
 
 
